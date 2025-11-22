@@ -174,8 +174,8 @@ Two models:
 <p align="center">
 <img width="837" height="365" alt="Capture d’écran 2025-11-22 à 14 02 49" src="https://github.com/user-attachments/assets/8d89a978-da75-488c-922e-b39db8ab2e99" />
 <p>
-*— Explicit 3-D stratified permeability, Homogeneous equivalent medium using \(k_v\)*
----
+
+<em>— Explicit 3-D stratified permeability, Homogeneous equivalent medium using k<sub>ν</sub></em>
 
 ## III-A — Results
 
@@ -194,6 +194,9 @@ Observations:
 <img width="879" height="398" alt="Capture d’écran 2025-11-22 à 14 03 08" src="https://github.com/user-attachments/assets/caadc7bc-ce3c-47d2-98c2-c0052cd7fa0c" />
 <p>
   
+<p align="center">
+<img width="879" height="398" alt="Capture d’écran 2025-11-22 à 14 19 50" src="https://github.com/user-attachments/assets/7b0a64f9-038d-4c82-b076-b628c14a1c7b" />
+<p>
 👉 Once flow becomes **3-D**, equivalent permeability **breaks down**.  
 A full **permeability tensor** or explicit layers are required.
 
