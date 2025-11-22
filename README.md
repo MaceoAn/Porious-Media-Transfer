@@ -1,110 +1,192 @@
-# Porious-Media-Transfer# 🧱 Porous-Media Transfer — From Pore Scale to 3-D Aquifer  
-*Micro-TDM – ENSEEIHT 2ⁿᵈ year*
+# 🧱 Porous-Media Transfer — From Pore Scale to 3-D Aquifer  
+*Micro-TDM – ENSEEIHT (2ᵉ année)*
 
-How do you go from a bunch of cylinders to a working reservoir model ?  
-We answer step-by-step with **COMSOL**, **coffee-break maths** and a lot of pictures.
+This project explores fluid transport in porous media from the **microscopic pore geometry** to the **macroscopic aquifer scale**, combining:
 
----
+- COMSOL Multiphysics simulations  
+- Classical porous media theory (Kozeny, Kozeny–Carman, Darcy–Forchheimer)  
+- Upscaling methods  
+- A final 3-D field-scale injection model  
 
-## I – Pore scale : “Stokes in a maze”  
-*2 m × 2 m slices packed with cylinders (ϕ = 0.72 – 0.86)*
-
-We generate three periodic arrays differing only in cylinder diameter and count, then solve **Stokes** for 0.001 ≤ Re ≤ 400.
-<img width="790" height="442" alt="Capture d’écran 2025-11-21 à 16 51 14" src="https://github.com/user-attachments/assets/4581da04-7dc5-4cd0-888a-1c9c93ce2bb1" />
-
-### I-A  Theory reminder  
-Porosity and specific surface:
-
-$$
-\varepsilon = \frac{S - S_{\text{solid}}}{S}, \quad S_{\text{spec}} = \frac{4}{D}
-$$
-
-Kozeny & Kozeny–Carman give **analytical** permeabilities:
-
-$$
-k_{\text{Koz}} = C_{0}\frac{\varepsilon^{3}}{S_{\text{spec}}^{2}}, \quad
-k_{\text{K-C}} = \frac{d_{\text{m}}^{2}}{180}\frac{\varepsilon^{3}}{(1-\varepsilon)^{2}}
-$$
-
-### I-B  Numerical campaign  
-Record ΔP(V) and fit **Darcy–Forchheimer**:
-
-$$
--\nabla P = \underbrace{\frac{\mu}{k}\,V}_{\text{Darcy}} + \underbrace{\beta\rho\,V^{2}}_{\text{Forchheimer}}
-$$
-
-| Medium | k Kozeny (m²) | k DNS-low-Re (m²) | β (m⁻¹) |
-|--------|---------------|-------------------|---------|
-| 1      | 9.2×10⁻³      | 8.4×10⁻⁴          | 1.1     |
-| 2      | 7.9×10⁻³      | 3.2×10⁻³          | 0.8     |
-| 3      | 7.0×10⁻³      | 2.2×10⁻³          | 0.9     |
-
-**Take-away**: Kozeny **over-predicts k by ≈ 10×** – calibrate on micro-CT !
-
-<img width="816" height="386" alt="Capture d’écran 2025-11-21 à 16 51 52" src="https://github.com/user-attachments/assets/44d637c3-95bb-42c8-95fe-f10ad2f3697b" />
-
-
-<img width="859" height="501" alt="Capture d’écran 2025-11-21 à 16 52 18" src="https://github.com/user-attachments/assets/08222ebb-5eb7-43bf-9f1f-21fb47779e3c" />
-
+The aim is to understand how **porosity, permeability and flow patterns** evolve across scales, and when **equivalent homogeneous models** remain valid.
 
 ---
 
-## II – Core scale : “Layer-cake aquifer”  
-*10 m thick stratified slab – two flow directions, two stories*
+# I — Pore Scale: Stokes Flow Through Cylinder Arrays  
+Three 2 m × 2 m periodic media were generated, each containing a square lattice of cylinders with different diameters → different porosities and specific surfaces.
 
-We build a 3-layer sandwich (high-k / low-k / high-k) and impose the **same** 50 kPa drop in two orientations.
+COMSOL solves **Stokes flow** across 0.001 ≤ Re ≤ 400 to extract pressure drop and infer permeability.
 
-### II-A  Horizontal flow – “layers in parallel”  
-Derivation gives:
-
-$$
-k_{\text{h}} = \frac{\sum k_{j}L_{j}}{L}
-$$
-
-COMSOL velocity map shows **jump discontinuities** at interfaces, yet the **average flux** matches the homogeneous equivalent within **0.3 %** – the formula works.
-
-![Stratified-horizontal](figures/strat_h.png)
-
-### II-B  Vertical flow – “layers in series”  
-Derivation gives:
-
-$$
-k_{\text{v}} = \frac{L}{\sum L_{j}/k_{j}}
-$$
-
-Now the **pressure field piles up** inside the tight layer and the global flow rate is again within **1 %** of theory – but the **local gradient is nowhere constant**.
-
-![Stratified-vertical](figures/strat_v.png)
-
-**Key visual**: same colour-bar, same ΔP, **completely different** pressure & velocity landscapes – yet the upscaled number is exact as long as the macroscopic gradient stays aligned with the layers.
+Picture of our Three configuration 
+<img width="855" height="442" alt="Capture d’écran 2025-11-22 à 13 49 48" src="https://github.com/user-attachments/assets/29b99a4f-9d5d-47bf-9365-52c06ae3cc62" />
 
 ---
 
-## III – Field scale : “3-D injection”  
-*100 m block with surface tank and bottom well*
+## I-A — Theory
 
-We move to a **real-field geometry**: 100 m × 100 m × 100 m block with a 10 m × 10 m injection box on top and a bottom outlet.  
-Boundary condition: **constant influx** 0.0001 m s⁻¹.
+### **Porosity**
+$$
+\varepsilon = \frac{S - S_{\text{solid}}}{S}
+$$
 
-### III-A  Set-up  
-- Use **kᵥ** from TD2 as the *homogeneous* permeability  
-- Run both **stratified** and **equivalent-homogeneous** models  
-- Extract **ΔP** between injection and extraction planes
+### **Specific surface**
+$$
+S_{\text{spec}} = \frac{4}{D}
+$$
 
-### III-B  Results  
+### **Kozeny and Kozeny–Carman permeabilities**
+$$
+k_{\text{Koz}} = C_0 \frac{\varepsilon^3}{S_{\text{spec}}^2}
+$$
+
+$$
+k_{\text{K-C}} = \frac{d_m^2}{180}\frac{\varepsilon^3}{(1 - \varepsilon)^2}, 
+\qquad 
+d_m = \frac{6(1 - \varepsilon)}{S_{\text{spec}}}
+$$
+
+These give *analytical* permeability estimates for comparison with numerical results.
+
+
+---
+
+## I-B — Numerical Procedure
+
+We impose a velocity and measure the pressure drop ΔP to reconstruct  
+the **Darcy–Forchheimer law**:
+
+$$
+-\nabla P = \frac{\mu}{k}\,V + \beta \rho V^2
+$$
+
+- Low-Re region → linear fit gives \(k\)  
+- High-Re → non-linearity determines \(\beta\)
+
+| Medium | k Kozeny (m²) | k DNS low-Re (m²) | β (m⁻¹) |
+|--------|----------------|-------------------|----------|
+| 1 | 9.2×10⁻³ | 8.4×10⁻⁴ | 1.1 |
+| 2 | 7.9×10⁻³ | 3.2×10⁻³ | 0.8 |
+| 3 | 7.0×10⁻³ | 2.2×10⁻³ | 0.9 |
+## 🔍 Fig. 2 – Finite-Element Mesh of the Porous Medium
+
+The computational mesh is strongly refined near the cylinder walls to resolve
+boundary layers, while the central region remains moderately refined.
+
+<p align="center">
+  <img width="837" height="421" alt="Capture d’écran 2025-11-22 à 13 52 57" src="https://github.com/user-attachments/assets/0fd6e84a-cccd-4709-9bde-2257e83a029f" />
+</p>
+
+— Unstructured triangular mesh used in the pore-scale simulations.*
+
+## – Velocity & Pressure Fields (Low vs High Reynolds)
+
+We visualize the Stokes flow for two regimes:
+- **Low Reynolds** (creeping flow)
+- **High Reynolds** (inertial effects visible)
+
+<p align="center">
+  <img width="837" height="517" alt="Capture d’écran 2025-11-22 à 13 53 08" src="https://github.com/user-attachments/assets/754fe6ce-105a-435d-911a-5e507970b58b" />
+</p>
+
+*Figure 3 — (a) Velocity field at low Re, (b) velocity field at high Re,  
+(c) pressure field at low Re, (d) pressure field at high Re.*
+
+These visualizations illustrate the transition from a purely viscous regime to
+a regime where inertial effects distort streamlines and amplify pressure gradients.
+**Key conclusion:**  
+Kozeny **systematically overestimates permeability by ~×10**.  
+DNS-based calibration is necessary for realistic media.
+
+---
+
+# II — Core Scale: Stratified 2-D Medium  
+We model a 10 m thick slab with **three horizontal layers**, using permeabilities from Part I.
+<img width="541" height="334" alt="Capture d’écran 2025-11-22 à 13 51 56" src="https://github.com/user-attachments/assets/d511a6f9-e437-4601-89a7-e3db8f633631" />
+Two configurations are tested:
+
+- **Horizontal flow** (parallel to layers)  
+- **Vertical flow** (across layers)
+
+---
+
+## II-A — Horizontal Flow (layers in parallel)
+
+Equivalent permeability:
+
+$$
+k_h = \frac{1}{L}\sum_j k_j L_j
+$$
+
+COMSOL:
+
+- Velocity jumps at interfaces  
+- Average flux matches theory within **0.3 %**
+
+
+👉 **Parallel formula perfectly valid.**
+
+---
+
+## II-B — Vertical Flow (layers in series)
+
+Equivalent permeability:
+
+$$
+k_v = \frac{L}{\sum_j L_j / k_j}
+$$
+
+COMSOL:
+
+- Pressure accumulates inside the low-k layer  
+- Total flow rate matches homogenised medium within **1 %**
+
+👉 Homogenisation is valid for **bulk flux**, but the **internal pressure field is not captured**.
+
+---
+
+# III — Field Scale: 3-D Injection Through Stratified Aquifer  
+We upscale to a **100 m × 100 m × 100 m** domain with:
+
+- A 10 m × 10 m injection box on top  
+- A bottom extraction plane  
+- Uniform inflow \(U_0 = 10^{-4}\,\text{m·s}^{-1}\)
+
+Two models:
+
+1. **Explicit 3-D stratified permeability**  
+2. **Homogeneous equivalent medium** using \(k_v\)
+
+---
+
+## III-A — Results
+
 | Quantity | Stratified | Homogeneous | Δ |
-|----------|------------|-------------|---|
-| ΔP (Pa)  | 1.37×10⁻⁴  | 1.09×10⁻⁴   | **+26 %** |
-| Sweep volume | larger | smaller | — |
+|----------|------------|-------------|-----|
+| ΔP (Pa)  | 1.37×10⁻⁴ | 1.09×10⁻⁴ | +26 % |
 
-**Conclusion**: as soon as streamlines **bend**, the single *kᵥ* is **not enough** – full tensor or explicit layers are required.
+Observations:
 
-![3-D streamlines](figures/3D_streamlines.png)  
-*Red = streamlines, grey = iso-pressure – bending through high-k layers*
+- Streamlines curve as they cross layers  
+- Isopressure surfaces become discontinuous  
+- Homogenised model underestimates ΔP significantly
 
-![Iso-pressure slice](figures/3D_p_iso.png)  
-*Discontinuous pressure planes at layer joints*
+👉 Once flow becomes **3-D**, equivalent permeability **breaks down**.  
+A full **permeability tensor** or explicit layers are required.
 
 ---
 
-## 🧰 Repository Structure
+# 🧩 Final Conclusions
+
+Across scales, we observe:
+
+- Microscale geometry dictates permeability  
+- Darcy’s law holds only at low Re → Forchheimer needed after  
+- Upscaling works in 2-D **only if flow is aligned with layering**  
+- In 3-D, streamlines bend → homogenisation fails (~25% ΔP error)  
+- Internal pressure and velocity structures require **heterogeneous models**
+
+This TD demonstrates the **limits of classical homogenisation** and shows why multi-scale modelling is essential in hydrogeology and porous-media engineering.
+
+---
+
+# 📂 Repository Structure (suggested)
