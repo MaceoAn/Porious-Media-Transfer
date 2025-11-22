@@ -18,8 +18,9 @@ Three 2 m × 2 m periodic media were generated, each containing a square lattice
 COMSOL solves **Stokes flow** across 0.001 ≤ Re ≤ 400 to extract pressure drop and infer permeability.
 
 Picture of our Three configuration 
+<p align="center">
 <img width="855" height="442" alt="Capture d’écran 2025-11-22 à 13 49 48" src="https://github.com/user-attachments/assets/29b99a4f-9d5d-47bf-9365-52c06ae3cc62" />
-
+<p>
 ---
 
 ## I-A — Theory
@@ -88,7 +89,7 @@ We visualize the Stokes flow for two regimes:
   <img width="837" height="517" alt="Capture d’écran 2025-11-22 à 13 53 08" src="https://github.com/user-attachments/assets/754fe6ce-105a-435d-911a-5e507970b58b" />
 </p>
 
-*Figure 3 — (a) Velocity field at low Re, (b) velocity field at high Re,  
+*— (a) Velocity field at low Re, (b) velocity field at high Re,  
 (c) pressure field at low Re, (d) pressure field at high Re.*
 
 These visualizations illustrate the transition from a purely viscous regime to
@@ -101,7 +102,9 @@ DNS-based calibration is necessary for realistic media.
 
 # II — Core Scale: Stratified 2-D Medium  
 We model a 10 m thick slab with **three horizontal layers**, using permeabilities from Part I.
+<p align="center">
 <img width="541" height="334" alt="Capture d’écran 2025-11-22 à 13 51 56" src="https://github.com/user-attachments/assets/d511a6f9-e437-4601-89a7-e3db8f633631" />
+  <p>
 Two configurations are tested:
 
 - **Horizontal flow** (parallel to layers)  
@@ -142,7 +145,19 @@ COMSOL:
 
 👉 Homogenisation is valid for **bulk flux**, but the **internal pressure field is not captured**.
 
----
+
+## II-C — Pressure Gradients in Parallel vs Series Layers
+
+The following figure summarizes the **two fundamental configurations** studied in TD2:
+
+- **Horizontal flow (layers in parallel)** → uniform global gradient, flux splits between layers.
+- **Vertical flow (layers in series)** → strong pressure build-up inside the low-permeability layer.
+
+<p align="center">
+  <img width="837" height="406" alt="Capture d’écran 2025-11-22 à 13 58 36" src="https://github.com/user-attachments/assets/6495bda7-4f24-40fb-b4ea-d34518f3d0ed" />
+</p>
+
+**Figure — Pressure distributions for horizontal vs vertical flow through a stratified medium.**
 
 # III — Field Scale: 3-D Injection Through Stratified Aquifer  
 We upscale to a **100 m × 100 m × 100 m** domain with:
@@ -156,6 +171,10 @@ Two models:
 1. **Explicit 3-D stratified permeability**  
 2. **Homogeneous equivalent medium** using \(k_v\)
 
+<p align="center">
+<img width="837" height="365" alt="Capture d’écran 2025-11-22 à 14 02 49" src="https://github.com/user-attachments/assets/8d89a978-da75-488c-922e-b39db8ab2e99" />
+<p>
+*— Explicit 3-D stratified permeability, Homogeneous equivalent medium using \(k_v\)*
 ---
 
 ## III-A — Results
@@ -166,10 +185,15 @@ Two models:
 
 Observations:
 
+  
 - Streamlines curve as they cross layers  
 - Isopressure surfaces become discontinuous  
 - Homogenised model underestimates ΔP significantly
-
+  
+<p align="center">
+<img width="879" height="398" alt="Capture d’écran 2025-11-22 à 14 03 08" src="https://github.com/user-attachments/assets/caadc7bc-ce3c-47d2-98c2-c0052cd7fa0c" />
+<p>
+  
 👉 Once flow becomes **3-D**, equivalent permeability **breaks down**.  
 A full **permeability tensor** or explicit layers are required.
 
